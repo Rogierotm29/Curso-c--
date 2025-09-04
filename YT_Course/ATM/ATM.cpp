@@ -11,13 +11,13 @@ void showMenu(){
     cout << "4. Exit" << endl;
 }
 
-void checkBalance(float balance){
+void checkBalance(double balance){
     cout <<endl;
 
     cout <<"Your balance is: $" <<balance<<endl;
 }
 
-float depositMoney(float balance){
+double depositMoney(double balance){
     cout <<endl;
     float deposit;
     cout <<"Enter the amount to deposit: ";
@@ -27,11 +27,11 @@ float depositMoney(float balance){
     return balance + deposit;
 }
 
-float withdrawMoney(float balance){
+double withdrawMoney(double balance){
     float withdrawAmount;
     
-    bool condition = true;
-    while(condition = true){
+    int condition = 1;
+    while(condition != 2){
         cout <<endl;
 
         cout <<"Your balance to with draw money is: $"<<balance <<endl;
@@ -57,7 +57,7 @@ int main(){
     // ATM machine
     // check balance, deposit money, withdraw money, show menu
     int option = 0;
-    float balance = 100000.0;
+    double balance = 100000.0;
 
 
     while(option !=4){
