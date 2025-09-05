@@ -12,13 +12,31 @@ int main(){
     unsigned char value2 {0x5}; // 0000 0101
 
     cout << setw(COLUMN_WIDTH) << "value1: " << setw(COLUMN_WIDTH) << bitset<8>(value1) << endl;
-    cout << setw(COLUMN_WIDTH) << "value2 : " << setw(COLUMN_WIDTH) << bitset<8>(value2) << endl;
+    cout << setw(COLUMN_WIDTH) << "value2: " << setw(COLUMN_WIDTH) << bitset<8>(value2) << endl;
 
 
     //AND
     cout << endl;
     cout << "Bitwise And : " << endl;
-    cout << setw(COLUMN_WIDTH) <<"value1 & value2 : " << setw(COLUMN_WIDTH) << bitset<8>(value1 & value2) << endl;
+    cout << setw(COLUMN_WIDTH) <<"value1 & value2: " << setw(COLUMN_WIDTH) << bitset<8>(value1 & value2) << endl;
     cout << endl;
+
+    //OR
+    cout << endl;
+    cout <<"Bitwise Or : " << endl;
+    cout << setw(COLUMN_WIDTH) <<"value1 | value2: " << setw(COLUMN_WIDTH) << bitset<8>(value1 | value2) << endl;
+    cout << endl;
+
+    //X0R
+    cout << endl;
+    cout <<"Bitwise XOr : " << endl;
+    cout << setw(COLUMN_WIDTH) <<" value1 ^ value2: "<< setw(COLUMN_WIDTH) << bitset<8>(value1 ^ value2) <<endl;
+    cout << endl;
+
+    //NOt
+    cout << endl;
+    cout <<"Bitwise Not : " << endl;
+    cout << setw(COLUMN_WIDTH) <<" ~value1: " << setw(COLUMN_WIDTH) << bitset<8>(~value1) << endl;
+    cout << setw(COLUMN_WIDTH) <<"~value2: " << setw(COLUMN_WIDTH) << bitset<8>(~value2) << endl;
 
 }
