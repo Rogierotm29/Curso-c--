@@ -35,7 +35,13 @@ int main (){
     p_int = &int_var1; //Assign a different address to the pointer
     cout <<"p_int (with different address : ) " << p_int << endl;
 
+    //Dereferencing a pointer
 
+    int* p_int2 {nullptr};
+    int int_data {56};
+    p_int2 = &int_data;
+
+    cout << "value : " << *p_int2 << endl;
 
     return 0;
 }
