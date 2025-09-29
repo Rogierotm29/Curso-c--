@@ -1,14 +1,3 @@
-// ============================================================================
-// Reto de Algoritmos 
-// Idea general:
-// - Leer genomas/genes en formato FASTA (me quedo solo con A, C, G, T).
-// - Implementar mi propia búsqueda (naive) sin usar string::find.
-// - Complemento inverso y palíndromos de complemento inverso (inverted repeats).
-// - Traducir DNA -> AA en los 6 marcos (3 forward + 3 reverse).
-// - Buscar proteínas (por secuencia AA o por nombre desde seq-proteins.txt).
-// - Comparar Wuhan vs Texas para ver SNPs (diff base a base).
-// ============================================================================
-
 #include <iostream>
 #include <fstream>
 #include <string>

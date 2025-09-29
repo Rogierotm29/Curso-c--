@@ -1,6 +1,8 @@
 // C++ Program to implement trie
 #include <iostream>
 #include <string>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -9,14 +11,8 @@ class TrieNode {
 public:
     bool endofWord;
     TrieNode* children[26];
-
-    // Constructore to initialize a trie node
-    TrieNode()
-    {
-        endofWord = false;
-        for (int i = 0; i < 26; i++) {
-            children[i] = nullptr;
-        }
+    TrieNode() : endofWord(false) {
+        for(int i{0}; i < 26; i++) children[i] = nullptr;
     }
 };
 
@@ -24,6 +20,18 @@ public:
 class Trie {
 private:
     TrieNode* root;
+
+    void collect(TrieNode* node, string& pref, vector<string>& out) const {
+        if(!node) return;
+        if(node -> endofWord) out.push_back(pref);
+        for(int i{0}; i < 26; ++i){
+            if(node->children[i]){
+                pref.push_back(char('a' + i));
+                collect(node->children[i], pref, out);
+                pref.pop_back();
+            }
+        }
+    }
 
 public:
     Trie() { root = new TrieNode(); }
@@ -43,12 +51,12 @@ public:
     }
 
     // Function to search a word in the trie
-    bool search(string word)
+    bool search(const string& word) const
     {
         TrieNode* node = root;
         for (char c : word) {
             int index = c - 'a';
-            if (!node->children[index]) {
+            if (index < 0 || index >= 26 || !node->children[index]) {
                 return false;
             }
             node = node->children[index];
@@ -103,51 +111,114 @@ public:
 
     // Function to start printing from the root
     void print() const { print(root, ""); }
+
+    vector<string> autocomplete(const string& prefix) const {
+        TrieNode* node = root;
+        for (char c : prefix){
+            int index = c - 'a';
+            if(index < 0 || index >= 26 || !node->children[index]){
+                return {};
+            }
+            node = node->children[index];
+        }
+        vector<string> out;
+        string pref = prefix;
+        collect(node, pref, out);
+        //Take out the prefix if the word was already complete
+        out.erase(remove(out.begin(), out.end(), prefix), out.end());
+        return out;
+    }
 };
 
+
+
+class SuffixNode {
+public:
+    SuffixNode* ch[26];
+    vector<int> occ; // Index of the start of the sufixes that pass true the node
+    SuffixNode() {
+        for (int i = 0; i < 26; ++i) ch[i] = nullptr;
+    }
+};
+
+class SuffixTrie {
+private:
+    SuffixNode* root;
+    string text;
+
+    void insertSuffix(int start) {
+        SuffixNode* node = root;
+        for (int j = start; j < (int)text.size(); ++j) {
+            char c = text[j];
+            int idx = c - 'a';
+            if (idx < 0 || idx >= 26) continue; // only a - z
+            if (!node->ch[idx]) node->ch[idx] = new SuffixNode();
+            node = node->ch[idx];
+            node->occ.push_back(start);
+        }
+    }
+
+public:
+    explicit SuffixTrie(const string& s) : text(s) {
+        root = new SuffixNode();
+        for (int i = 0; i < (int)text.size(); ++i) insertSuffix(i);
+    }
+
+    //Returns the indexs of start where pat appears
+    vector<int> find(const string& pat) const {
+        const SuffixNode* node = root;
+        for (char c : pat) {
+            int idx = c - 'a';
+            if (idx < 0 || idx >= 26 || !node->ch[idx]) return {};
+            node = node->ch[idx];
+        }
+        return node->occ; 
+    }
+};
 int main()
 {
     // Create a Trie
     Trie trie;
 
-    // Insert words into the trie
-    trie.insert("geek");
-    trie.insert("geeks");
-    trie.insert("code");
-    trie.insert("coder");
-    trie.insert("coding");
+    vector<string> palabras = {"casi", "casa", "camisa", "camara", "camion", "ave", "alce"};
+    for(auto& w : palabras) trie.insert(w);
 
-    // Print the trie
-    cout << "Trie contents:" << endl;
-    trie.print();
 
-    // Search for words in the trie
-    cout << "\nSearch results:" << endl;
-    cout << "geek: " << trie.search("geek") << endl;
-    cout << "geeks: " << trie.search("geeks") << endl;
-    cout << "code: " << trie.search("code") << endl;
-    cout << "coder: " << trie.search("coder") << endl;
-    cout << "coding: " << trie.search("coding") << endl;
-    cout << "codex: " << trie.search("codex") << endl;
+    //Requested words
+    vector<string> consultas = {"cam", "casa", "car", "al"};
+    for(auto& q : consultas){
+        if(trie.search(q)){
+            cout << "La cadena " << q << " existe completa" << endl;
+        }else{
+            auto sug = trie.autocomplete(q);
+            if(!sug.empty()){
+                cout << "Sugerencias para " << q << ":" << endl;
+                for(auto& s : sug) cout << s << endl;
+            }else{
+                cout << "No hay coincidencias para " << q << endl;
+            }
+        }
+        cout << "--------" << endl;
+    }
 
-    // Check if prefixes exist in the trie
-    cout << "\nPrefix results:" << endl;
-    cout << "ge: " << trie.startsWith("ge") << endl;
-    cout << "cod: " << trie.startsWith("cod") << endl;
-    cout << "coz: " << trie.startsWith("coz") << endl;
+    //Suffix trie with anabanana
+    string texto = "anabanana";
+    SuffixTrie st(texto);
 
-    // Delete words from the trie
-    trie.deleteWord("coding");
-    trie.deleteWord("geek");
 
-    // Print the trie after deletions
-    cout << "\nTrie contents after deletions:" << endl;
-    trie.print();
-
-    // Search for words in the trie after deletions
-    cout << "\nSearch results after deletions:" << endl;
-    cout << "coding: " << trie.search("coding") << endl;
-    cout << "geek: " << trie.search("geek") << endl;
+    vector<string> patrones = {"ana", "ban", "nana", "aba"};
+    for (auto& p : patrones) {
+        auto pos = st.find(p);
+        if (pos.empty()) {
+            cout << "No se encontro '" << p << "' en " << texto << endl;
+        } else {
+            cout << "Ocurrencias de '" << p << "' en " << texto << " (indices 0-based inicio,fin):" << endl;
+            for (int start : pos) {
+                cout << p << " -> [" << start << "," << (start + (int)p.size() - 1) << "]" << endl;
+            }
+        }
+        cout << "----" << endl;
+    }
 
     return 0;
 }
