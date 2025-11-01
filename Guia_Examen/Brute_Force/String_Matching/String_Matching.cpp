@@ -30,7 +30,7 @@ int main(){
 
     cout << "Patron encontrado en en la posicion : ";
     for(size_t i {0}; i < inicio; ++i){
-        cout << pos[i] << " ";
+        cout << pos[i] << " " << pos[i] + size_pat - 1;
     }
 
     return 0;

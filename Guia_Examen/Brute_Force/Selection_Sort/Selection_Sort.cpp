@@ -1,33 +1,30 @@
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
 
 int main(){
-    int Array [6] {10,50,11,55,2,12};
+    std::vector<int> arr {10,3,18,20,4,1,9};
 
+    int size = arr.size();
 
+    for(size_t i{0}; i < size -1; ++i){
+        int indexMin = i;
+        for(size_t j{i}; j < size; ++j){
+            if(arr[j] < arr[indexMin]){
+                indexMin = j;
+            };
 
-    for(size_t i{0}; i < size(Array) - 1; ++i){
-        size_t min_index = i;
-        for(size_t j{i + 1}; j < size(Array); ++j){
-            if(Array[j] < Array[min_index]){
-                min_index = j; 
-            }
-        }
+        };
+        int aux = arr[indexMin];
+        arr[indexMin] = arr[i];
+        arr[i] = aux;
+    };
 
-        if(min_index != i){
-            int temp = Array[i];
-            Array [i] = Array[min_index];
-            Array[min_index] = temp;
-        }
-    }
-    
-
-    for(int i : Array){
-        cout << i << " ";
-    }
-
+    for(size_t i{0}; i < size; ++i){
+        std::cout << arr[i] << " "; 
+    };
 
     return 0;
 }

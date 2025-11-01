@@ -1,32 +1,47 @@
-// C++ program to find the power set using
-// binary representation of a number
+#include <iostream>
+#include <vector>
+#include <algorithm>
 
-#include <bits/stdc++.h>
-using namespace std;
+//Genera las 2^n combinaciones binarias de longitud n
+std::vector<std::vector<int>> powerSetBin(int n){
+    //Caso base
+    if(n == 1){
+        return {{0},{1}};
+    }else{
+        //caso recursivo
+        std::vector<std::vector<int>> L1 = powerSetBin(n - 1);
 
-vector<string> allPossibleStrings(string &s){
-    int n = s.size();
-    vector<string> res;
+        //L2 = L1 en reversa
+        std::vector<std::vector<int>> L2 = L1;
+        reverse(L2.begin(),L2.end());
 
-    //Iterate through all subsets (represented by 0 to 2^n - 1)
-    for (int i = 0; i < (1 << n); i++){
-        string sub = "";
-        for(int j = 0; j < n; j++){
-            if(i & (1 << j)) sub += s[j];
+        //a cada sublista de L1 le agregamos un 0 al inicio
+        for(auto &v: L1){
+            v.insert(v.begin(),0);
         }
-        res.push_back(sub);
-    }
 
-    return res;
+        //a cada sublista de L2le agregamos un 1 al inicio
+        for(auto &v: L2){
+            v.insert(v.begin(),1);
+        }
+
+        //Concatenar L1 y L2
+        L1.insert(L1.end(),L2.begin(),L2.end());
+        return L1;
+    }
 }
 
 
 int main(){
-    string s = "abc";
-    vector<string> subsets = allPossibleStrings(s);
-    for(string sub : subsets){
-        cout << sub << endl;
+    int n;
+    std::cout << "n: ";
+
+    std::cin >> n;
+    auto res = powerSetBin(n);
+
+    for(const auto &vec : res){
+        for (int x : vec) std::cout << x;
+        std::cout << "\n";
     }
     return 0;
-
 }

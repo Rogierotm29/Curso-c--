@@ -1,27 +1,31 @@
 #include <iostream>
-using namespace std;
+#include <vector>
+
 
 
 int main(){
 
-    int a[] {4,8,1,5,9,0,2,7,3,6};
+    std::vector<int> arr {4,10,12,43,20,50,1};
+    int size = arr.size();
 
-    int length = 10;
-
-    for(size_t i{0}; i < length; ++i){
-        for(size_t j{0}; j < length - 1; ++j){
-            if(a[j] > a[j + 1 ]){
-                int temp{};
-                temp = a [j + 1];
-                a [j + 1] = a [j];
-                a[j] = temp;
+    for(size_t i{0}; i < size - 1; ++i){
+        bool change = false;
+        for(size_t j{0}; j < size - i - 1; ++j){
+            if(arr[j] > arr[j + 1]){
+                change = true;
+                int aux = arr[j + 1];
+                arr[j + 1] = arr[j];
+                arr[j] = aux;
             }
+        }
+        if(change == false){
+            break;
         }
     }
 
-    for(int i : a){
-        cout << a[i] << " ";
-    }
 
+    for(size_t i{0}; i < size; ++i){
+        std::cout << arr[i] << " ";
+    }
     return 0;
 }
